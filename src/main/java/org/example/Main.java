@@ -7,7 +7,6 @@ import java.nio.file.Paths;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) throws IOException, ParseException {
@@ -18,8 +17,8 @@ public class Main {
         System.out.println(searchInFile(filePath, searchTerm));
 
         //4. Extract Nom
-        List<Output4> output4List = findNomAndAVGAndReturn(filePath);
-        output4List.forEach(output -> System.out.println(output.toString()));
+        Output4 output = findNomAndAVGAndReturn(filePath, "Start Step No. 4");
+        System.out.println(output);
         //3. Process step times
         System.out.println(findProcessStepTims(filePath));
 
@@ -64,32 +63,45 @@ public class Main {
     }
 
     private static int findProcessStepTims(String filePath) throws IOException {
-        try (var stream = Files.lines(Path.of(filePath))) {
-            return stream.filter(line -> line.contains("Process Step Time")).map(line -> {
+        int sum = 0;
+        boolean isIt2Or3 = false;
+        List<String> lines = Files.readAllLines(Path.of(filePath));
+        for (String line : lines) {
+            if (line.contains("Start Step No. 2") || line.contains("Start Step No. 3")) {
+                isIt2Or3 = true;
+            } else if (isIt2Or3 && line.contains("Process Step Time")) {
                 String[] linePart = line.split("\\s+");
-                return Integer.parseInt(linePart[7].trim());
-            }).reduce(0, (number, acc) -> number + acc);
+                sum += Integer.parseInt(linePart[7].trim());
+                isIt2Or3 = false;
+
+            }
         }
+        return sum;
 
     }
 
-    private static List<Output4> findNomAndAVGAndReturn(String filePath) throws IOException {
-        List<Output4> output4List = new ArrayList<>();
-        try (var stream = Files.lines(Path.of(filePath))) {
+    private static Output4 findNomAndAVGAndReturn(String filePath, String stepNo) throws IOException {
 
-            List<String> filteredLines = stream.filter(s -> s.contains("Nom.:") && s.contains("Avg.:")).collect(Collectors.toList());
 
-            for (String line : filteredLines) {
+        boolean isStep4Satisfied = false;
+        Output4 output4 = new Output4();
+        List<String> lines = Files.readAllLines(Path.of(filePath));
+
+        for (String line : lines) {
+            if (line.contains(stepNo)) {
+                isStep4Satisfied = true;
+            } else if (isStep4Satisfied && line.contains("XTAL Thickness")) {
                 String[] lineParts = line.split("\\s+");
+                if (lineParts.length == 10 && lineParts[6].equals("Nom.:") && lineParts[8].equals("Act.:")) {
+                    output4.setNom(Double.parseDouble(lineParts[7].trim()));
+                    output4.setAvg(Double.parseDouble(lineParts[9].trim()));
 
-                if (lineParts.length == 10 && lineParts[6].equals("Nom.:") && lineParts[8].equals("Avg.:")) {
-                    Output4 output4 = new Output4(Double.parseDouble(lineParts[7].trim()), Double.parseDouble(lineParts[9].trim()));
-                    output4List.add(output4);
                 }
             }
-
         }
-        return output4List;
+
+
+        return output4;
     }
 
     private static int searchInFile(String filePath, String searchTerm) throws IOException {
@@ -105,6 +117,9 @@ class Output4 {
     double nom;
     double avg;
 
+    public Output4() {
+    }
+
     public Output4(double nom, double avg) {
         this.nom = nom;
         this.avg = avg;
@@ -114,8 +129,16 @@ class Output4 {
         return nom;
     }
 
+    public void setNom(double nom) {
+        this.nom = nom;
+    }
+
     public double getAvg() {
         return avg;
+    }
+
+    public void setAvg(double avg) {
+        this.avg = avg;
     }
 
     @Override
