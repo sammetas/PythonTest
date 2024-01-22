@@ -1,0 +1,20 @@
+
+f
+java:S2095&"DUse try-with-resources or close this "Stream" in a "finally" clause.(ËÈ÷ıÿÿÿÿ8ìÜóúÒ1
+a
+java:S2095%"DUse try-with-resources or close this "Stream" in a "finally" clause.(Ê„ûŒ8ïÜóúÒ1
+^
+java:S1075"ARefactor your code to get this URI from a customizable parameter.(­·¬Ì8¯–ŞúÒ1
+L	java:S106"+Replace this use of System.out by a logger.(áò’–ÿÿÿÿÿ8°–ŞúÒ1
+G	java:S106"+Replace this use of System.out by a logger.(ïÕ×œ8±–ŞúÒ1
+G	java:S106"+Replace this use of System.out by a logger.(Ùßé°8±–ŞúÒ1
+G	java:S106"+Replace this use of System.out by a logger.(Ò²Ê8±–ŞúÒ1
+F	java:S106"+Replace this use of System.out by a logger.(†úüS8¯òúÒ1
+W
+java:S18540":Remove this useless assignment to local variable "output".(‹ÃÚØ8©—áúÒ1
+H
+java:S14810"+Remove this unused "output" local variable.(‹ÃÚØ8ùÕáúÒ1
+L
+java:S11976"*Move the array designators [] to the type.( ³ÆÚıÿÿÿÿ8³–ŞúÒ1
+o
+java:S6204P"RReplace this usage of 'Stream.collect(Collectors.toList())' with 'Stream.toList()'(­°ô†8¶–ŞúÒ1
